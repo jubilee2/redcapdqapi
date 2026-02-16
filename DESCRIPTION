@@ -1,0 +1,22 @@
+Package: redcapdqapi
+Title: R Client for the Vanderbilt REDCap Data Quality API External Module
+Version: 0.0.1
+Authors@R: c(
+    person("Jubilee", "Tan", email = "hsi-nien.tan@vumc.org", role = c("aut", "cre"))
+)
+Description: Lightweight R client for the 'data_quality_api' REDCap external module
+    published by the Vanderbilt REDCap Group. Supports exporting and importing
+    data quality status/resolution information via the module's export/import endpoints.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports:
+    httr2,
+    jsonlite,
+    tibble,
+    dplyr,
+    rlang
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

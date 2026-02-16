@@ -1,0 +1,32 @@
+{
+  "123": {
+    "status_id": "123",
+    "rule_id": null,
+    "pd_rule_id": null,
+    "non_rule": "1",
+    "project_id": "999",
+    "record": "1001",
+    "event_id": "1",
+    "field_name": "age",
+    "repeat_instrument": null,
+    "instance": "1",
+    "status": null,
+    "exclude": "0",
+    "query_status": null,
+    "assigned_username": null,
+    "resolutions": {
+      "1": {
+        "res_id": "1",
+        "status_id": "123",
+        "ts": "2026-02-16 10:00:00",
+        "response_requested": "0",
+        "response": null,
+        "comment": "this is a test",
+        "current_query_status": null,
+        "upload_doc_id": null,
+        "field_comment_edited": "0",
+        "username": "user1"
+      }
+    }
+  }
+}
