@@ -33,9 +33,3 @@ dq_client <- function(api_url, token, pid, prefix = "data_quality_api") {
     class = "dq_client"
   )
 }
-
-validate_scalar_string <- function(x, name) {
-  if (!is.character(x) || length(x) != 1 || is.na(x) || !nzchar(x)) {
-    stop(sprintf("`%s` must be a single non-empty string.", name), call. = FALSE)
-  }
-}
