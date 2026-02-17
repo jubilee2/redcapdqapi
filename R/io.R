@@ -3,7 +3,7 @@ new_module_request <- function(client, page) {
     httr2::req_method("POST") |>
     httr2::req_timeout(60) |>
     httr2::req_url_query(
-      prefix = client$prefix,
+      prefix = "data_quality_api",
       type = "module",
       page = page,
       NOAUTH = "",
