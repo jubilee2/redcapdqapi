@@ -7,7 +7,7 @@ Create an R package from scratch that wraps the Vanderbilt REDCap [data_quality_
 - (Optional but OK) tibble for tidy outputs; otherwise return base data.frames
 
 ## Public API (stable)
-- dq_client(api_url, token, pid, prefix = "data_quality_api")
+- dq_client(api_url, token, pid, prefix = "vanderbilt_dataQuality")
 - dq_export(client, records = NULL, user = NULL, status = NULL, raw = FALSE)
 - dq_import(client, data)
 - dq_flatten(x)

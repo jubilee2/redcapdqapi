@@ -42,7 +42,7 @@ dq_import(client, raw_json)
 
 ## API surface
 
-- `dq_client(api_url, token, pid)`
+- `dq_client(api_url, token, pid, prefix = "vanderbilt_dataQuality")`
 - `dq_export(client, records = NULL, user = NULL, status = NULL, raw = FALSE)`
 - `dq_import(client, data)`
 - `dq_flatten(x)`

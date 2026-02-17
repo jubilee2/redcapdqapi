@@ -116,3 +116,16 @@ test_that("dq_export validates status filter values", {
     fixed = TRUE
   )
 })
+
+test_that("dq_client supports default and custom module prefix", {
+  cli_default <- dq_client("https://redcap.example.org/api/", token = "abc", pid = 12)
+  expect_identical(cli_default$prefix, "vanderbilt_dataQuality")
+
+  cli_custom <- dq_client(
+    "https://redcap.example.org/api/",
+    token = "abc",
+    pid = 12,
+    prefix = "custom_prefix"
+  )
+  expect_identical(cli_custom$prefix, "custom_prefix")
+})
