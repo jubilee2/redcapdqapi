@@ -112,8 +112,7 @@ test_that("dq_export validates status filter values", {
 
   expect_error(
     dq_export(cli, status = "IN_PROGRESS"),
-    "`status` must be NULL or one of: OPEN, CLOSED, VERIFIED, DEVERIFIED.",
-    fixed = TRUE
+    "`status` must be NULL or one of: OPEN, CLOSED, VERIFIED, DEVERIFIED."
   )
 })
 
