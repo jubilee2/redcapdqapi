@@ -35,6 +35,7 @@ Create an R package from scratch that wraps the Vanderbilt REDCap [data_quality_
 
 ## Testing
 - Use testthat.
+- Add unit tests with testthat for all public functions.
 - Prefer fixtures: include at least one export JSON fixture and test dq_flatten + parsing.
 - Mock HTTP in unit tests when possible; no live server dependency required.
 
