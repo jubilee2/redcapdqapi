@@ -1,5 +1,5 @@
 ## Build goal
-Create an R package from scratch that wraps the Vanderbilt REDCap data_quality_api external module and serves as an API client for https://github.com/vanderbilt-redcap/data_quality_api.
+Create an R package from scratch that wraps the Vanderbilt REDCap [data_quality_api](https://github.com/vanderbilt-redcap/data_quality_api) external module.
 
 ## Core dependencies
 - httr2
