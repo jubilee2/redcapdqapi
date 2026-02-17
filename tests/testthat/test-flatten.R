@@ -13,7 +13,7 @@ test_that("dq_flatten handles parsed fixture", {
     c(
       "status_id", "rule_id", "pd_rule_id", "non_rule", "project_id", "record",
       "event_id", "field_name", "repeat_instrument", "instance", "status", "exclude",
-      "query_status", "assigned_username"
+      "query_status", "group_id", "assigned_username"
     )
   )
 
@@ -21,9 +21,54 @@ test_that("dq_flatten handles parsed fixture", {
     out$resolutions,
     c(
       "res_id", "status_id", "ts", "response_requested", "response", "comment",
-      "current_query_status", "upload_doc_id", "field_comment_edited", "username"
+      "current_query_status", "upload_doc_id", "field_comment_edited",
+      "migration_status", "migration_doc_id", "username"
     )
   )
+})
+
+test_that("dq_flatten includes group and migration columns for API-shaped payload", {
+  payload <- list(
+    "2801447" = list(
+      status_id = "2801447",
+      rule_id = NULL,
+      pd_rule_id = NULL,
+      non_rule = "1",
+      project_id = "194",
+      record = "122",
+      event_id = "5194",
+      field_name = "daily_m2",
+      repeat_instrument = NULL,
+      instance = "1",
+      status = NULL,
+      exclude = "0",
+      query_status = "OPEN",
+      group_id = "1550",
+      assigned_username = "foo@example.com",
+      resolutions = list(
+        "2920750" = list(
+          res_id = "2920750",
+          status_id = "2801447",
+          ts = "2025-09-14 13:11:01",
+          response_requested = "1",
+          response = NULL,
+          comment = "test",
+          current_query_status = "OPEN",
+          upload_doc_id = NULL,
+          field_comment_edited = "0",
+          migration_status = NULL,
+          migration_doc_id = NULL,
+          username = "foo@example.com"
+        )
+      )
+    )
+  )
+
+  out <- redcapdqapi::dq_flatten(payload)
+
+  expect_equal(out$status$group_id[[1]], "158550")
+  expect_true(is.na(out$resolutions$migration_status[[1]]))
+  expect_true(is.na(out$resolutions$migration_doc_id[[1]]))
 })
 
 test_that("dq_flatten handles dq_export objects", {

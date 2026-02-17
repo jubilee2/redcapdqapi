@@ -16,12 +16,13 @@ dq_flatten <- function(x) {
   status_cols <- c(
     "status_id", "rule_id", "pd_rule_id", "non_rule", "project_id", "record",
     "event_id", "field_name", "repeat_instrument", "instance", "status", "exclude",
-    "query_status", "assigned_username"
+    "query_status", "group_id", "assigned_username"
   )
 
   resolution_cols <- c(
     "res_id", "status_id", "ts", "response_requested", "response", "comment",
-    "current_query_status", "upload_doc_id", "field_comment_edited", "username"
+    "current_query_status", "upload_doc_id", "field_comment_edited",
+    "migration_status", "migration_doc_id", "username"
   )
 
   if (length(data) == 0) {
