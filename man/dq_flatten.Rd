@@ -10,7 +10,7 @@ dq_flatten(x)
 \value{A list with \code{status} and \code{resolutions} data frames.}
 \description{Pure transformation helper for \code{dq_export()} payloads.}
 \examples{
-fixture <- dq_read_json(system.file("extdata", "example_export.json", package = "redcapdqapi"))
+fixture <- jsonlite::read_json(system.file("extdata", "example_export.json", package = "redcapdqapi"), simplifyVector = FALSE)
 out <- dq_flatten(fixture)
 names(out)
 }

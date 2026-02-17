@@ -49,25 +49,3 @@ as_json_payload <- function(data) {
 
   jsonlite::toJSON(data, auto_unbox = TRUE, null = "null")
 }
-
-#' Write export-shaped data to JSON
-#'
-#' @param x Export-shaped data list.
-#' @param path Destination file path.
-#'
-#' @return The `path`, invisibly.
-#' @export
-dq_write_json <- function(x, path) {
-  jsonlite::write_json(x, path, auto_unbox = TRUE, pretty = TRUE, null = "null")
-  invisible(path)
-}
-
-#' Read export-shaped data from JSON
-#'
-#' @param path Source file path.
-#'
-#' @return Parsed list with `simplifyVector = FALSE`.
-#' @export
-dq_read_json <- function(path) {
-  jsonlite::read_json(path, simplifyVector = FALSE)
-}

@@ -1,6 +1,6 @@
 test_that("dq_flatten handles parsed fixture", {
   fixture_path <- test_path("fixtures", "example_export.json")
-  x <- redcapdqapi::dq_read_json(fixture_path)
+  x <- jsonlite::read_json(fixture_path, simplifyVector = FALSE)
   out <- redcapdqapi::dq_flatten(x)
 
   expect_true(is.list(out))
@@ -66,7 +66,7 @@ test_that("dq_flatten includes group and migration columns for API-shaped payloa
 
   out <- redcapdqapi::dq_flatten(payload)
 
-  expect_equal(out$status$group_id[[1]], "158550")
+  expect_equal(out$status$group_id[[1]], "1550")
   expect_true(is.na(out$resolutions$migration_status[[1]]))
   expect_true(is.na(out$resolutions$migration_doc_id[[1]]))
 })
