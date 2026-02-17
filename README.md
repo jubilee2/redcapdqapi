@@ -32,6 +32,17 @@ flat$resolutions
 # Re-import either raw JSON text or list
 raw_json <- dq_export(client, raw = TRUE)
 dq_import(client, raw_json)
+
+# Convenience path: minimal data frame -> OPEN status + one resolution comment
+minimal <- data.frame(
+  record = "1001",
+  event_id = "1",
+  field_name = "age",
+  comment = "Please verify this value",
+  assigned_username = "data.team",
+  stringsAsFactors = FALSE
+)
+dq_import(client, minimal)
 ```
 
 ## Security note

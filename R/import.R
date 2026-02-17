@@ -3,7 +3,11 @@
 #' Calls the external module import endpoint using `page=import`.
 #'
 #' @param client A `dq_client` object.
-#' @param data Export-shaped data as a JSON string or R list.
+#' @param data Import payload as one of:
+#'   - raw JSON string
+#'   - export-shaped R list
+#'   - minimal data frame with columns `record`, `event_id`, `field_name`, `comment`, `assigned_username`
+#'     (one OPEN status with one resolution comment is created per row)
 #'
 #' @return Parsed API response for the import request.
 #' @examples
@@ -11,11 +15,25 @@
 #' cli <- dq_client("https://redcap.example.org/api/", Sys.getenv("REDCAP_TOKEN"), 123)
 #' exported <- dq_export(cli, raw = TRUE)
 #' dq_import(cli, exported)
+#'
+#' minimal <- data.frame(
+#'   record = "1001",
+#'   event_id = "1",
+#'   field_name = "age",
+#'   comment = "Please verify this value",
+#'   assigned_username = "data.team",
+#'   stringsAsFactors = FALSE
+#' )
+#' dq_import(cli, minimal)
 #' }
 #' @export
 dq_import <- function(client, data) {
   if (!inherits(client, "dq_client")) {
     stop("`client` must be a dq_client object.", call. = FALSE)
+  }
+
+  if (is.data.frame(data)) {
+    data <- build_open_import_payload(data, project_id = client$pid)
   }
 
   data_json <- as_json_payload(data)

@@ -88,7 +88,16 @@ test_that("perform_request errors do not leak response body", {
   })
 
   server <- webfakes::new_app_process(app)
-  server$start()
+  start_err <- tryCatch(
+    {
+      server$start()
+      NULL
+    },
+    error = function(e) e
+  )
+  if (!is.null(start_err)) {
+    skip(paste("webfakes app process is unavailable:", conditionMessage(start_err)))
+  }
   on.exit(server$stop(), add = TRUE)
 
   cli <- dq_client(server$url("/api/"), token = "abc", pid = 12)
