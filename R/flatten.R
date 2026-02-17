@@ -6,7 +6,10 @@
 #'
 #' @return A list with `status` and `resolutions` data frames.
 #' @examples
-#' fixture <- jsonlite::read_json(system.file("extdata", "example_export.json", package = "redcapdqapi"), simplifyVector = FALSE)
+#' fixture <- jsonlite::read_json(
+#'   system.file("extdata", "example_export.json", package = "redcapdqapi"),
+#'   simplifyVector = FALSE
+#' )
 #' out <- dq_flatten(fixture)
 #' names(out)
 #' @export
