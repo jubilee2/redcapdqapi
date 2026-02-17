@@ -37,7 +37,6 @@ dq_export <- function(client, records = NULL, user = NULL, status = NULL, raw = 
   body <- list(token = client$token, format = "json", returnFormat = "json")
   if (!is.null(records)) {
     body$record <- records
-    body$records <- records
   }
   if (!is.null(user)) body$user <- user
   if (!is.null(status)) body$status <- status
