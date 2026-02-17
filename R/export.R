@@ -5,7 +5,7 @@
 #' @param client A `dq_client` object.
 #' @param records Optional character vector of record IDs.
 #' @param user Optional scalar username filter.
-#' @param status Optional scalar query status filter.
+#' @param status Optional scalar query status filter: `OPEN`, `CLOSED`, `VERIFIED`, or `DEVERIFIED`.
 #' @param raw If `TRUE`, return raw JSON text.
 #'
 #' @return If `raw = TRUE`, a JSON string. Otherwise a structured object of class
@@ -31,7 +31,7 @@ dq_export <- function(client, records = NULL, user = NULL, status = NULL, raw = 
   }
 
   if (!is.null(status)) {
-    validate_scalar_string(status, "status")
+    validate_export_status(status)
   }
 
   body <- list(token = client$token, format = "json", returnFormat = "json")

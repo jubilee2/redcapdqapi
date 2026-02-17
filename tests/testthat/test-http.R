@@ -105,3 +105,14 @@ test_that("perform_request errors do not leak response body", {
   expect_true(grepl("HTTP 400", conditionMessage(err), fixed = TRUE))
   expect_false(grepl("SECRET-PHI-CONTENT", conditionMessage(err), fixed = TRUE))
 })
+
+
+test_that("dq_export validates status filter values", {
+  cli <- dq_client("https://redcap.example.org/api/", token = "abc", pid = 12)
+
+  expect_error(
+    dq_export(cli, status = "IN_PROGRESS"),
+    "`status` must be NULL or one of: OPEN, CLOSED, VERIFIED, DEVERIFIED.",
+    fixed = TRUE
+  )
+})

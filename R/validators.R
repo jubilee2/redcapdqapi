@@ -10,3 +10,24 @@ validate_scalar_string <- function(x, name) {
     stop(sprintf("`%s` must be a single non-empty string.", name), call. = FALSE)
   }
 }
+
+#' Validate export status filter
+#'
+#' @param status Status value to validate.
+#'
+#' @return Invisible `NULL`, but throws an error if validation fails.
+#' @noRd
+validate_export_status <- function(status) {
+  validate_scalar_string(status, "status")
+
+  allowed <- c("OPEN", "CLOSED", "VERIFIED", "DEVERIFIED")
+  if (!status %in% allowed) {
+    stop(
+      sprintf(
+        "`status` must be NULL or one of: %s.",
+        paste(allowed, collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+}
