@@ -12,6 +12,36 @@ new_module_request <- function(client, page) {
     httr2::req_error(is_error = function(resp) FALSE)
 }
 
+safe_response_snippet <- function(response) {
+  body <- tryCatch(
+    httr2::resp_body_string(response),
+    error = function(e) ""
+  )
+
+  trimmed <- trimws(body)
+  if (!nzchar(trimmed)) {
+    return("<empty>")
+  }
+
+  parsed <- tryCatch(
+    jsonlite::fromJSON(trimmed, simplifyVector = FALSE),
+    error = function(e) NULL
+  )
+
+  if (is.null(parsed)) {
+    return("<non-json response omitted>")
+  }
+
+  if (is.list(parsed)) {
+    keys <- names(parsed)
+    if (length(keys) > 0) {
+      return(sprintf("json_keys=[%s]", paste(keys, collapse = ",")))
+    }
+  }
+
+  "<json response>"
+}
+
 perform_request <- function(req, endpoint) {
   response <- httr2::req_perform(req)
   status <- httr2::resp_status(response)
@@ -19,9 +49,10 @@ perform_request <- function(req, endpoint) {
   if (status >= 400) {
     stop(
       sprintf(
-        "Request to %s failed with HTTP %s.",
+        "Request to %s failed with HTTP %s. Response snippet: %s",
         endpoint,
-        status
+        status,
+        safe_response_snippet(response)
       ),
       call. = FALSE
     )
@@ -43,8 +74,12 @@ parse_import_text <- function(text) {
 }
 
 as_json_payload <- function(data) {
-  if (is.character(data) && length(data) == 1 && !is.na(data)) {
+  if (is.character(data) && length(data) == 1 && !is.na(data) && nzchar(data)) {
     return(data)
+  }
+
+  if (!is.list(data)) {
+    stop("`data` must be a single JSON string or an R list.", call. = FALSE)
   }
 
   jsonlite::toJSON(data, auto_unbox = TRUE, null = "null")

@@ -18,6 +18,10 @@ dq_client <- function(api_url, token, pid, prefix = "vanderbilt_dataQuality") {
   validate_scalar_string(api_url, "api_url")
   validate_scalar_string(token, "token")
 
+  if (!grepl("^https?://", api_url)) {
+    stop("`api_url` must start with http:// or https://.", call. = FALSE)
+  }
+
   if (!(is.numeric(pid) || is.character(pid)) || length(pid) != 1 || is.na(pid)) {
     stop("`pid` must be a single numeric value or numeric string.", call. = FALSE)
   }

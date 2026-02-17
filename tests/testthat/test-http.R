@@ -100,11 +100,11 @@ test_that("perform_request errors do not leak response body", {
   }
   on.exit(server$stop(), add = TRUE)
 
-  cli <- dq_client(server$url("/api/"), token = "abc", pid = 12)
+  cli <- redcapdqapi::dq_client(server$url("/api/"), token = "abc", pid = 12)
 
   err <- tryCatch(
     {
-      dq_export(cli)
+      redcapdqapi::dq_export(cli)
       NULL
     },
     error = function(e) e
@@ -117,23 +117,43 @@ test_that("perform_request errors do not leak response body", {
 
 
 test_that("dq_export validates status filter values", {
-  cli <- dq_client("https://redcap.example.org/api/", token = "abc", pid = 12)
+  cli <- redcapdqapi::dq_client("https://redcap.example.org/api/", token = "abc", pid = 12)
 
   expect_error(
-    dq_export(cli, status = "IN_PROGRESS"),
+    redcapdqapi::dq_export(cli, status = "IN_PROGRESS"),
     "`status` must be NULL or one of: OPEN, CLOSED, VERIFIED, DEVERIFIED."
   )
 })
 
 test_that("dq_client supports default and custom module prefix", {
-  cli_default <- dq_client("https://redcap.example.org/api/", token = "abc", pid = 12)
+  cli_default <- redcapdqapi::dq_client("https://redcap.example.org/api/", token = "abc", pid = 12)
   expect_identical(cli_default$prefix, "vanderbilt_dataQuality")
 
-  cli_custom <- dq_client(
+  cli_custom <- redcapdqapi::dq_client(
     "https://redcap.example.org/api/",
     token = "abc",
     pid = 12,
     prefix = "custom_prefix"
   )
   expect_identical(cli_custom$prefix, "custom_prefix")
+})
+
+
+test_that("dq_export validates raw flag", {
+  cli <- redcapdqapi::dq_client("https://redcap.example.org/api/", token = "abc", pid = 12)
+
+  expect_error(
+    redcapdqapi::dq_export(cli, raw = "yes"),
+    "`raw` must be TRUE or FALSE."
+  )
+})
+
+
+test_that("dq_import validates data payload type", {
+  cli <- redcapdqapi::dq_client("https://redcap.example.org/api/", token = "abc", pid = 12)
+
+  expect_error(
+    redcapdqapi::dq_import(cli, data = 123),
+    "`data` must be a single JSON string or an R list."
+  )
 })

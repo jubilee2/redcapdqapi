@@ -34,6 +34,8 @@ dq_export <- function(client, records = NULL, user = NULL, status = NULL, raw = 
     validate_export_status(status)
   }
 
+  validate_scalar_logical(raw, "raw")
+
   body <- list(token = client$token, format = "json", returnFormat = "json")
   if (!is.null(records)) {
     body$record <- records

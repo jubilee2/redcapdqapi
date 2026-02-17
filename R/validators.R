@@ -31,3 +31,16 @@ validate_export_status <- function(status) {
     )
   }
 }
+
+#' Validate scalar logical values
+#'
+#' @param x The object to validate.
+#' @param name The name of the object to use in the error message.
+#'
+#' @return Invisible `NULL`, but throws an error if validation fails.
+#' @noRd
+validate_scalar_logical <- function(x, name) {
+  if (!is.logical(x) || length(x) != 1 || is.na(x)) {
+    stop(sprintf("`%s` must be TRUE or FALSE.", name), call. = FALSE)
+  }
+}
