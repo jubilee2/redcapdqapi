@@ -6,6 +6,9 @@
 ## Install
 
 ```r
+# install from GitHub
+remotes::install_github("jubilee2/redcapdqapi")
+
 # local development
 # remotes::install_local(".")
 ```
