@@ -1,37 +1,48 @@
 # redcapdqapi
 
-Lightweight R client for the Vanderbilt REDCap Group **data_quality_api** external module.
+`redcapdqapi` is a lightweight R wrapper for the Vanderbilt REDCap
+`data_quality_api` external module.
 
-## What this wraps
+## Install
 
-This package calls the external module endpoints:
+```r
+# local development
+# remotes::install_local(".")
+```
 
-- `...?prefix=<prefix>&page=export&pid=<pid>&type=module&NOAUTH`
-- `...?prefix=<prefix>&page=import&pid=<pid>&type=module&NOAUTH`
-
-and posts a body similar to the standard REDCap API (`token`, `format`, etc.).
-
-## Quick start
+## Minimal usage
 
 ```r
 library(redcapdqapi)
 
-cli <- dq_client(
-  api_url = "https://redcap.vumc.org/api/",
-  token   = Sys.getenv("REDCAP_TOKEN"),
-  pid     = 12345,
-  prefix  = "data_quality_api"
+client <- dq_client(
+  api_url = "https://redcap.example.org/api/",
+  token = Sys.getenv("REDCAP_TOKEN"),
+  pid = 12345
 )
 
-out <- dq_export(cli, records = c("1001", "1002"), status = "OPEN")
-out$status
-out$resolutions
+# Export as structured dq_export object
+exported <- dq_export(client)
 
-# Re-import the same structure (API will skip duplicates)
-res_ids <- dq_import(cli, dq_export(cli, raw = TRUE))
+# Flatten to two tabular outputs
+flat <- dq_flatten(exported)
+flat$status
+flat$resolutions
+
+# Re-import either raw JSON text or list
+raw_json <- dq_export(client, raw = TRUE)
+dq_import(client, raw_json)
 ```
 
-## Notes
+## Security note
 
-1) The external module must be enabled in the REDCap Control Center and on the project.  
-2) Import inserts **new** resolutions only; it does not overwrite old ones.
+- Store tokens in environment variables such as `REDCAP_TOKEN`.
+- Never hardcode tokens in scripts, notebooks, or source control.
+- This package avoids including tokens in error messages.
+
+## API surface
+
+- `dq_client(api_url, token, pid, prefix = "data_quality_api")`
+- `dq_export(client, records = NULL, user = NULL, status = NULL, raw = FALSE)`
+- `dq_import(client, data)`
+- `dq_flatten(x)`

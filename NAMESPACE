@@ -2,11 +2,7 @@
 
 export(dq_client)
 export(dq_export)
-export(dq_import)
 export(dq_flatten)
-export(dq_write_json)
+export(dq_import)
 export(dq_read_json)
-importFrom(dplyr,bind_rows)
-importFrom(dplyr,select)
-importFrom(rlang,abort)
-importFrom(tibble,as_tibble)
+export(dq_write_json)

@@ -1,21 +1,24 @@
 #' Import data quality resolutions
 #'
-#' Wraps the external module's `import` endpoint. The import only adds *new*
-#' resolutions (duplicates based on timestamp + username are skipped upstream).
+#' Calls the external module import endpoint using `page=import`.
 #'
-#' @param client A `dq_client`.
-#' @param data Either a nested list (export format) or a JSON string of that structure.
+#' @param client A `dq_client` object.
+#' @param data Export-shaped data as a JSON string or R list.
 #'
-#' @return Integer vector of inserted resolution IDs (as returned by the API).
+#' @return Parsed API response for the import request.
+#' @examples
+#' \dontrun{
+#' cli <- dq_client("https://redcap.example.org/api/", Sys.getenv("REDCAP_TOKEN"), 123)
+#' exported <- dq_export(cli, raw = TRUE)
+#' dq_import(cli, exported)
+#' }
 #' @export
 dq_import <- function(client, data) {
-  if (!inherits(client, "dq_client")) rlang::abort("`client` must be a dq_client.")
-
-  if (is.character(data) && length(data) == 1) {
-    data_json <- data
-  } else {
-    data_json <- jsonlite::toJSON(data, auto_unbox = TRUE, null = "null")
+  if (!inherits(client, "dq_client")) {
+    stop("`client` must be a dq_client object.", call. = FALSE)
   }
+
+  data_json <- as_json_payload(data)
 
   body <- list(
     token = client$token,
@@ -24,10 +27,11 @@ dq_import <- function(client, data) {
     data = data_json
   )
 
-  req <- dq_build_request(client, page = "import") |>
-    httr2::req_body_form(!!!body)
+  endpoint <- paste0(client$api_url, "?page=import&type=module&prefix=", client$prefix)
+  req <- do.call(httr2::req_body_form, c(list(new_module_request(client, "import")), body))
 
-  resp <- dq_perform(req)
-  x <- httr2::resp_body_json(resp, simplifyVector = TRUE)
-  x
+  text <- perform_request(req, endpoint) |>
+    httr2::resp_body_string()
+
+  parse_import_text(text)
 }
