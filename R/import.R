@@ -27,7 +27,7 @@ dq_import <- function(client, data) {
     data = data_json
   )
 
-  endpoint <- paste0(client$api_url, "?page=import&type=module&prefix=data_quality_api")
+  endpoint <- paste0(client$api_url, "?page=import&type=module&prefix=", client$prefix)
   req <- do.call(httr2::req_body_form, c(list(new_module_request(client, "import")), body))
 
   text <- perform_request(req, endpoint) |>

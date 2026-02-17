@@ -41,7 +41,7 @@ dq_export <- function(client, records = NULL, user = NULL, status = NULL, raw = 
   if (!is.null(user)) body$user <- user
   if (!is.null(status)) body$status <- status
 
-  endpoint <- paste0(client$api_url, "?page=export&type=module&prefix=data_quality_api")
+  endpoint <- paste0(client$api_url, "?page=export&type=module&prefix=", client$prefix)
   req <- do.call(httr2::req_body_form, c(list(new_module_request(client, "export")), body))
 
   text <- perform_request(req, endpoint) |>
