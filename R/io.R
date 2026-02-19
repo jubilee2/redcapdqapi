@@ -74,7 +74,11 @@ parse_import_text <- function(text) {
 }
 
 as_json_payload <- function(data) {
-  if (is.character(data) && length(data) == 1 && !is.na(data) && nzchar(data)) {
+  if (is.character(data) && length(data) == 1 && !is.na(data)) {
+    if (!isTRUE(jsonlite::validate(data))) {
+      stop("`data` JSON string is not valid JSON.", call. = FALSE)
+    }
+
     return(data)
   }
 

@@ -157,3 +157,43 @@ test_that("dq_import validates data payload type", {
     "`data` must be a single JSON string or an R list."
   )
 })
+
+
+test_that("dq_import rejects invalid JSON string before request dispatch", {
+  cli <- redcapdqapi::dq_client("https://redcap.example.org/api/", token = "abc", pid = 12)
+
+  expect_error(
+    redcapdqapi::dq_import(cli, data = "{not json}"),
+    "`data` JSON string is not valid JSON."
+  )
+})
+
+
+test_that("dq_import accepts valid JSON string payload", {
+  skip_if_not_installed("webfakes")
+
+  app <- webfakes::new_app()
+  app$post("/api/", function(req, res) {
+    res$send('{"count":1}')
+  })
+
+  server <- webfakes::new_app_process(app)
+  start_err <- tryCatch(
+    {
+      server$start()
+      NULL
+    },
+    error = function(e) e
+  )
+  if (!is.null(start_err)) {
+    skip(paste("webfakes app process is unavailable:", conditionMessage(start_err)))
+  }
+  on.exit(server$stop(), add = TRUE)
+
+  cli <- redcapdqapi::dq_client(server$url("/api/"), token = "abc", pid = 12)
+  json_payload <- '[{"status_id":"1","resolutions":{}}]'
+
+  result <- redcapdqapi::dq_import(cli, data = json_payload)
+
+  expect_equal(result$count, 1)
+})
