@@ -1,6 +1,6 @@
 \name{dq_import}
 \alias{dq_import}
-\title{Import data quality resolutions}
+\title{Import data quality query comments}
 \usage{
 dq_import(client, data)
 }
@@ -11,7 +11,7 @@ dq_import(client, data)
 \item raw JSON string
 \item export-shaped R list
 \item minimal data frame with columns \code{record}, \code{event_id}, \code{field_name}, \code{comment}, \code{assigned_username}
-(one OPEN status with one resolution comment is created per row)
+(one OPEN query with one comment is created per row)
 }}
 }
 \value{Parsed API response for the import request.}

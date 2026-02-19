@@ -1,4 +1,4 @@
-#' Import data quality resolutions
+#' Import data quality query comments
 #'
 #' Calls the external module import endpoint using `page=import`.
 #'
@@ -7,7 +7,7 @@
 #'   - raw JSON string
 #'   - export-shaped R list
 #'   - minimal data frame with columns `record`, `event_id`, `field_name`, `comment`, `assigned_username`
-#'     (one OPEN status with one resolution comment is created per row)
+#'     (one OPEN query with one comment is created per row)
 #'
 #' @return Parsed API response for the import request.
 #' @examples

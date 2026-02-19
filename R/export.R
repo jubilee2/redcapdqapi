@@ -1,11 +1,11 @@
-#' Export data quality statuses and resolutions
+#' Export data quality queries and comments
 #'
 #' Calls the external module export endpoint using `page=export`.
 #'
 #' @param client A `dq_client` object.
 #' @param records Optional character vector of record IDs.
 #' @param user Optional scalar username filter.
-#' @param status Optional scalar query status filter: `OPEN`, `CLOSED`, `VERIFIED`, or `DEVERIFIED`.
+#' @param status Optional scalar query state filter: `OPEN`, `CLOSED`, `VERIFIED`, or `DEVERIFIED`.
 #' @param raw If `TRUE`, return raw JSON text.
 #'
 #' @return If `raw = TRUE`, a JSON string. Otherwise a structured object of class

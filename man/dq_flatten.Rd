@@ -7,7 +7,7 @@ dq_flatten(x)
 \arguments{
 \item{x}{A \code{dq_export} object or a parsed export list.}
 }
-\value{A list with \code{status} and \code{resolutions} data frames.}
+\value{A list with \code{status} (query-level) and \code{resolutions} (comment-level) data frames.}
 \description{Pure transformation helper for \code{dq_export()} payloads.}
 \examples{
 fixture <- jsonlite::read_json(

@@ -29,14 +29,14 @@ exported <- dq_export(client)
 
 # Flatten to two tabular outputs
 flat <- dq_flatten(exported)
-flat$status
-flat$resolutions
+flat$status      # query-level rows
+flat$resolutions # comment/reply rows
 
 # Re-import either raw JSON text or list
 raw_json <- dq_export(client, raw = TRUE)
 dq_import(client, raw_json)
 
-# Convenience path: minimal data frame -> OPEN status + one resolution comment
+# Convenience path: minimal data frame -> OPEN query + one comment
 minimal <- data.frame(
   record = "1001",
   event_id = "1",
@@ -58,18 +58,18 @@ dq_import(client, minimal)
 
 - **Repeat instrument support (upstream limitation)**
   The REDCap Data Quality External Module (`import.php`) currently does not
-  persist `repeat_instrument` when inserting a new status row. Because of this,
-  `dq_import()` cannot create a status scoped to a specific repeating
+  persist `repeat_instrument` when inserting a new query row. Because of this,
+  `dq_import()` cannot create a query scoped to a specific repeating
   instrument instance. This behavior is an upstream module limitation, not an
   issue in this R client.
 
-- **Import creates new resolutions only**
-  Import supports creating new resolution comments only; existing resolutions
+- **Import creates new comments only**
+  Import supports creating new query comments/replies only; existing comments
   cannot be modified through this API.
 
-- **Duplicate resolution detection key**
-  Duplicate resolution detection is based on `(status_id, ts, user_id)`.
-  Resolutions with the same timestamp and user are treated as duplicates and
+- **Duplicate comment detection key**
+  Duplicate comment detection is based on `(status_id, ts, user_id)`.
+  Comments with the same timestamp and user are treated as duplicates and
   skipped.
 
 ## API surface

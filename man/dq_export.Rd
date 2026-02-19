@@ -1,6 +1,6 @@
 \name{dq_export}
 \alias{dq_export}
-\title{Export data quality statuses and resolutions}
+\title{Export data quality queries and comments}
 \usage{
 dq_export(client, records = NULL, user = NULL, status = NULL, raw = FALSE)
 }
@@ -8,7 +8,7 @@ dq_export(client, records = NULL, user = NULL, status = NULL, raw = FALSE)
 \item{client}{A \code{dq_client} object.}
 \item{records}{Optional character vector of record IDs.}
 \item{user}{Optional scalar username filter.}
-\item{status}{Optional scalar query status filter: \code{OPEN}, \code{CLOSED}, \code{VERIFIED}, or \code{DEVERIFIED}.}
+\item{status}{Optional scalar query state filter: \code{OPEN}, \code{CLOSED}, \code{VERIFIED}, or \code{DEVERIFIED}.}
 \item{raw}{If \code{TRUE}, return raw JSON text.}
 }
 \value{If \code{raw = TRUE}, a JSON string; otherwise a structured object of class

@@ -17,8 +17,8 @@ knitr::opts_chunk$set(
 This vignette summarizes `data_quality_api` import (`page=import`) behavior and maps it
 to recommended inputs for `redcapdqapi::dq_import()`. It focuses on:
 
-1. Which fields are needed to create a new status row.
-2. Which fields are needed to add a comment/resolution to an existing status.
+1. Which fields are needed to create a new query row.
+2. Which fields are needed to add a comment to an existing query.
 
 ## Import endpoint and core constraints
 
@@ -30,13 +30,13 @@ to recommended inputs for `redcapdqapi::dq_import()`. It focuses on:
 
 Important import behavior in `data_quality_api`:
 
-- Import only adds new resolutions (comment/reply rows); it does not modify existing rows.
-- Deduplication is based on `ts + user` (resolved to `user_id`) within a status; duplicates are skipped.
+- Import only adds new comments/replies; it does not modify existing comments.
+- Deduplication is based on `ts + user` (resolved to `user_id`) within a query; duplicates are skipped.
 - `data` must be provided as JSON text.
 
 ## Top-level payload structure
 
-`data` must represent a collection of status rows. Two JSON shapes are accepted:
+`data` must represent a collection of query rows. Two JSON shapes are accepted:
 
 - object: `{"123": {...}, "124": {...}}`
 - array: `[{...}, {...}]`
@@ -47,9 +47,9 @@ Important import behavior in `data_quality_api`:
 - export-shaped R list (automatically converted using `toJSON`)
 - minimal data frame (converted by the package into OPEN-query payload)
 
-## Fields required to create a new status row
+## Fields required to create a new query row
 
-When no existing status is matched, the API attempts to create a new status row. To succeed,
+When no existing query is matched, the API attempts to create a new query row. To succeed,
 `dataRow` should satisfy:
 
 - `project_id` must match the project associated with the API token.
@@ -63,9 +63,9 @@ Recommended fields in practice:
 - strongly recommended: `status_id` (can be empty string), `instance`, `repeat_instrument`, `assigned_username`
 
 > Note: `repeat_instrument` may participate in status matching, but may not be persisted in the
-> status master row.
+> query master row.
 
-## Fields required to add comment/resolution to an existing status
+## Fields required to add a comment to an existing query
 
 Each comment is in `dataRow$resolutions[[i]]`. Recommended minimum fields:
 
@@ -73,18 +73,18 @@ Each comment is in `dataRow$resolutions[[i]]`. Recommended minimum fields:
 - `username`: REDCap username resolvable to a valid user
 - `comment`: comment text
 
-Status-related fields (recommended):
+Query-state fields (recommended):
 
 - `current_query_status`: e.g., `OPEN`, `CLOSED`, `VERIFIED`, `DEVERIFIED`
 - `response_requested`: `0` or `1`
 - `response`: e.g., `DATA_MISSING`, `TYPOGRAPHICAL_ERROR`, `CONFIRMED_CORRECT`, `WRONG_SOURCE`, `OTHER`
 
-For existing statuses, the most stable approach is to set the same existing status ID in both
+For existing queries, the most stable approach is to set the same existing status ID in both
 `dataRow$status_id` and `resolution$status_id`.
 
 ## Minimal payload examples
 
-### A. Create a new status + one comment
+### A. Create a new query + one comment
 
 ```{r}
 new_status_payload <- list(
@@ -115,7 +115,7 @@ new_status_payload <- list(
 jsonlite::toJSON(new_status_payload, auto_unbox = TRUE, null = "null", pretty = TRUE)
 ```
 
-### B. Add one comment to an existing status
+### B. Add one comment to an existing query
 
 ```{r}
 existing_status_payload <- list(
@@ -165,7 +165,7 @@ dq_import(client, existing_status_payload)
 
 - Store API tokens in environment variables (for example, `REDCAP_TOKEN`).
 - Never commit tokens to version control.
-- If import fails, first verify required field completeness and `project_id / status_id` alignment.
+- If import fails, first verify required field completeness and `project_id / status_id` alignment for the target query.
 
 ## Limitations and upstream constraints
 
@@ -174,15 +174,15 @@ dq_import(client, existing_status_payload)
 The REDCap Data Quality API `import.php` implementation does not store the `repeat_instrument`
 column when inserting new rows into `redcap_data_quality_status`.
 
-Although `repeat_instrument` is used when attempting to match existing status records,
+Although `repeat_instrument` is used when attempting to match existing query records,
 it is not written during status creation. As a result:
 
-- A new status cannot be created that is scoped specifically to a repeating instrument.
-- Statuses created via the API will have `repeat_instrument = NULL`.
+- A new query cannot be created that is scoped specifically to a repeating instrument.
+- Queries created via the API will have `repeat_instrument = NULL`.
 - In repeating instrument contexts, instance-level isolation may not behave as expected.
 
 This behavior originates from the upstream REDCap Data Quality External Module
 and is not controlled by `redcapdqapi`.
 
-Users who require repeat-instrument–aware status creation must modify the upstream
+Users who require repeat-instrument–aware query creation must modify the upstream
 `import.php` implementation accordingly.

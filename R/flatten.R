@@ -4,7 +4,7 @@
 #'
 #' @param x A `dq_export` object or a parsed export list.
 #'
-#' @return A list with `status` and `resolutions` data frames.
+#' @return A list with `status` (query-level) and `resolutions` (comment-level) data frames.
 #' @examples
 #' fixture <- jsonlite::read_json(
 #'   system.file("extdata", "example_export.json", package = "redcapdqapi"),
