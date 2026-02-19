@@ -1,6 +1,6 @@
 Package: redcapdqapi
 Title: R Client for Vanderbilt REDCap Data Quality API Module
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: person(given = "Jubilee", family = "Tan", email = "hsi-nien.tan@vumc.org", role = c("aut", "cre"))
 Author: Jubilee Tan [aut, cre]
 Maintainer: Jubilee Tan <hsi-nien.tan@vumc.org>
