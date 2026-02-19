@@ -1,0 +1,168 @@
+---
+title: "Data Quality API Import Specification and Payload Examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Data Quality API Import Specification and Payload Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette summarizes `data_quality_api` import (`page=import`) behavior and maps it
+to recommended inputs for `redcapdqapi::dq_import()`. It focuses on:
+
+1. Which fields are needed to create a new status row.
+2. Which fields are needed to add a comment/resolution to an existing status.
+
+## Import endpoint and core constraints
+
+`dq_import()` calls the REDCap API with module parameters:
+
+- `type=module`
+- `prefix=vanderbilt_dataQuality` (override with `dq_client(..., prefix=)`)
+- `page=import`
+
+Important import behavior in `data_quality_api`:
+
+- Import only adds new resolutions (comment/reply rows); it does not modify existing rows.
+- Deduplication is based on `ts + user` (resolved to `user_id`) within a status; duplicates are skipped.
+- `data` must be provided as JSON text.
+
+## Top-level payload structure
+
+`data` must represent a collection of status rows. Two JSON shapes are accepted:
+
+- object: `{"123": {...}, "124": {...}}`
+- array: `[{...}, {...}]`
+
+`dq_import()` accepts three input forms:
+
+- raw JSON string
+- export-shaped R list (automatically converted using `toJSON`)
+- minimal data frame (converted by the package into OPEN-query payload)
+
+## Fields required to create a new status row
+
+When no existing status is matched, the API attempts to create a new status row. To succeed,
+`dataRow` should satisfy:
+
+- `project_id` must match the project associated with the API token.
+- `record` must be non-empty.
+- `event_id` must be valid (single-event projects may auto-apply event in some cases).
+- `field_name` must exist in project metadata.
+
+Recommended fields in practice:
+
+- required: `project_id`, `record`, `event_id`, `field_name`
+- strongly recommended: `status_id` (can be empty string), `instance`, `repeat_instrument`, `assigned_username`
+
+> Note: `repeat_instrument` may participate in status matching, but may not be persisted in the
+> status master row.
+
+## Fields required to add comment/resolution to an existing status
+
+Each comment is in `dataRow$resolutions[[i]]`. Recommended minimum fields:
+
+- `ts`: timestamp string
+- `username`: REDCap username resolvable to a valid user
+- `comment`: comment text
+
+Status-related fields (recommended):
+
+- `current_query_status`: e.g., `OPEN`, `CLOSED`, `VERIFIED`, `DEVERIFIED`
+- `response_requested`: `0` or `1`
+- `response`: e.g., `DATA_MISSING`, `TYPOGRAPHICAL_ERROR`, `CONFIRMED_CORRECT`, `WRONG_SOURCE`, `OTHER`
+
+For existing statuses, the most stable approach is to set the same existing status ID in both
+`dataRow$status_id` and `resolution$status_id`.
+
+## Minimal payload examples
+
+### A. Create a new status + one comment
+
+```{r}
+new_status_payload <- list(
+  list(
+    status_id = "",
+    project_id = "123",
+    record = "A001",
+    event_id = "1",
+    field_name = "age",
+    instance = NULL,
+    repeat_instrument = NULL,
+    assigned_username = NULL,
+    resolutions = list(
+      list(
+        res_id = "",
+        status_id = "",
+        ts = "2026-02-18 13:45:00",
+        username = "jubilee",
+        comment = "Please verify age value.",
+        response_requested = 1,
+        response = NULL,
+        current_query_status = "OPEN"
+      )
+    )
+  )
+)
+
+jsonlite::toJSON(new_status_payload, auto_unbox = TRUE, null = "null", pretty = TRUE)
+```
+
+### B. Add one comment to an existing status
+
+```{r}
+existing_status_payload <- list(
+  list(
+    status_id = "9999",
+    project_id = "123",
+    record = "A001",
+    event_id = "1",
+    field_name = "age",
+    instance = NULL,
+    repeat_instrument = NULL,
+    assigned_username = NULL,
+    resolutions = list(
+      list(
+        res_id = "",
+        status_id = "9999",
+        ts = "2026-02-18 14:00:00",
+        username = "jubilee",
+        comment = "Follow-up: confirm source document.",
+        response_requested = 0,
+        response = "OTHER",
+        current_query_status = "OPEN"
+      )
+    )
+  )
+)
+
+jsonlite::toJSON(existing_status_payload, auto_unbox = TRUE, null = "null", pretty = TRUE)
+```
+
+## Calling `dq_import()`
+
+```{r eval = FALSE}
+library(redcapdqapi)
+
+client <- dq_client(
+  api_url = "https://redcap.example.org/api/",
+  token = Sys.getenv("REDCAP_TOKEN"),
+  pid = 123
+)
+
+# Import directly from list input (automatically converted to JSON)
+dq_import(client, existing_status_payload)
+```
+
+## Security notes
+
+- Store API tokens in environment variables (for example, `REDCAP_TOKEN`).
+- Never commit tokens to version control.
+- If import fails, first verify required field completeness and `project_id / status_id` alignment.
