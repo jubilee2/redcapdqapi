@@ -10,9 +10,10 @@ dq_import(client, data)
 \itemize{
 \item raw JSON string
 \item export-shaped R list
-\item minimal data frame with columns \code{record}, \code{event_id}, \code{field_name}, \code{comment}
-plus required \code{username} (with optional \code{assigned_username})
-(one OPEN query with one comment is created per row)
+\item minimal data frame with columns \code{record}, \code{field_name}, \code{comment}
+plus required \code{username} (\code{event_id} defaults to \code{"1"} if omitted;
+optional \code{assigned_username})
+(one query resolution payload row is created per row)
 }}
 }
 \value{Parsed API response for the import request.}
@@ -25,7 +26,6 @@ dq_import(cli, exported)
 
 minimal <- data.frame(
   record = "1001",
-  event_id = "1",
   field_name = "age",
   comment = "Please verify this value",
   username = "data.team",

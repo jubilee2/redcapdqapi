@@ -6,9 +6,10 @@
 #' @param data Import payload as one of:
 #'   - raw JSON string
 #'   - export-shaped R list
-#'   - minimal data frame with columns `record`, `event_id`, `field_name`, `comment`
-#'     plus required `username` (with optional `assigned_username`)
-#'     (one OPEN query with one comment is created per row)
+#'   - minimal data frame with columns `record`, `field_name`, `comment`
+#'     plus required `username` (`event_id` defaults to `"1"` if omitted;
+#'     optional `assigned_username`)
+#'     (one query resolution payload row is created per row)
 #'
 #' @return Parsed API response for the import request.
 #' @examples
@@ -19,7 +20,6 @@
 #'
 #' minimal <- data.frame(
 #'   record = "1001",
-#'   event_id = "1",
 #'   field_name = "age",
 #'   comment = "Please verify this value",
 #'   username = "data.team",
@@ -34,7 +34,7 @@ dq_import <- function(client, data) {
   }
 
   if (is.data.frame(data)) {
-    data <- build_open_import_payload(data, project_id = client$pid)
+    data <- build_import_payload(data, project_id = client$pid)
   }
 
   data_json <- as_json_payload(data)

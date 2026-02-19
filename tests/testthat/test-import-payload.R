@@ -1,4 +1,4 @@
-test_that("build_open_import_payload converts minimal rows into OPEN status payload", {
+test_that("build_import_payload converts minimal rows into import payload", {
   x <- data.frame(
     record = c("1001", "1002"),
     event_id = c("1", "1"),
@@ -9,7 +9,7 @@ test_that("build_open_import_payload converts minimal rows into OPEN status payl
     stringsAsFactors = FALSE
   )
 
-  payload <- redcapdqapi:::build_open_import_payload(x, project_id = "194")
+  payload <- redcapdqapi:::build_import_payload(x, project_id = "194")
 
   expect_type(payload, "list")
   expect_equal(length(payload), 2)
@@ -25,7 +25,7 @@ test_that("build_open_import_payload converts minimal rows into OPEN status payl
   expect_match(first$resolutions[[1]]$ts, "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")
 })
 
-test_that("build_open_import_payload supports optional assignment columns", {
+test_that("build_import_payload supports optional assignment columns and status_id", {
   x <- data.frame(
     record = "1001",
     event_id = "1",
@@ -34,18 +34,21 @@ test_that("build_open_import_payload supports optional assignment columns", {
     username = "qa_user",
     assigned_username = "qa_user",
     response_requested = "1",
+    status_id = "42",
     stringsAsFactors = FALSE
   )
 
-  payload <- redcapdqapi:::build_open_import_payload(x, project_id = "194")
+  payload <- redcapdqapi:::build_import_payload(x, project_id = "194")
   row <- payload[[1]]
 
   expect_equal(row$assigned_username, "qa_user")
   expect_equal(row$resolutions[[1]]$username, "qa_user")
   expect_equal(row$resolutions[[1]]$response_requested, "1")
+  expect_equal(row$status_id, "42")
+  expect_equal(row$resolutions[[1]]$status_id, "42")
 })
 
-test_that("build_open_import_payload accepts username without assigned_username", {
+test_that("build_import_payload accepts username without assigned_username", {
   x <- data.frame(
     record = "1001",
     event_id = "1",
@@ -55,11 +58,26 @@ test_that("build_open_import_payload accepts username without assigned_username"
     stringsAsFactors = FALSE
   )
 
-  payload <- redcapdqapi:::build_open_import_payload(x, project_id = "194")
+  payload <- redcapdqapi:::build_import_payload(x, project_id = "194")
   row <- payload[[1]]
 
   expect_null(row$assigned_username)
   expect_equal(row$resolutions[[1]]$username, "qa_user")
+})
+
+
+test_that("build_import_payload defaults event_id to 1 when omitted", {
+  x <- data.frame(
+    record = "1001",
+    field_name = "age",
+    comment = "needs source check",
+    username = "qa_user",
+    stringsAsFactors = FALSE
+  )
+
+  payload <- redcapdqapi:::build_import_payload(x, project_id = "194")
+
+  expect_equal(payload[[1]]$event_id, "1")
 })
 
 test_that("dq_import rejects malformed minimal data frame before network call", {

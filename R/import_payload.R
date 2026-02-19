@@ -1,5 +1,5 @@
-build_open_import_payload <- function(data, project_id = NULL) {
-  required_cols <- c("record", "event_id", "field_name", "comment", "username")
+build_import_payload <- function(data, project_id = NULL) {
+  required_cols <- c("record", "field_name", "comment", "username")
   missing <- setdiff(required_cols, names(data))
   if (length(missing) > 0) {
     stop(
@@ -17,23 +17,24 @@ build_open_import_payload <- function(data, project_id = NULL) {
 
   out <- vector("list", nrow(data))
   for (i in seq_len(nrow(data))) {
-    out[[i]] <- build_open_import_row(data, i, project_id = project_id)
+    out[[i]] <- build_import_row(data, i, project_id = project_id)
   }
   names(out) <- as.character(seq_len(nrow(data)))
 
   out
 }
 
-build_open_import_row <- function(data, i, project_id = NULL) {
+build_import_row <- function(data, i, project_id = NULL) {
   record <- required_df_string(data, i, "record")
-  event_id <- required_df_string(data, i, "event_id")
+  event_id <- optional_df_string(data, i, "event_id", default = "1")
   field_name <- required_df_string(data, i, "field_name")
   comment <- required_df_string(data, i, "comment")
   assigned_username <- optional_df_string(data, i, "assigned_username", default = NULL)
   username <- required_df_string(data, i, "username")
+  status_id <- optional_df_string(data, i, "status_id", default = "")
 
   list(
-    status_id = "",
+    status_id = status_id,
     project_id = if (is.null(project_id)) NULL else as.character(project_id),
     record = record,
     event_id = event_id,
@@ -44,7 +45,7 @@ build_open_import_row <- function(data, i, project_id = NULL) {
     resolutions = list(
       "1" = list(
         res_id = "",
-        status_id = "",
+        status_id = status_id,
         ts = current_import_timestamp(),
         response_requested = optional_df_string(data, i, "response_requested", default = "0"),
         response = NULL,

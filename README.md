@@ -36,17 +36,25 @@ flat$resolutions # comment/reply rows
 raw_json <- dq_export(client, raw = TRUE)
 dq_import(client, raw_json)
 
-# Convenience path: minimal data frame -> OPEN query + one comment
+# Convenience path: minimal data frame -> one import row (open or add-resolution)
 minimal <- data.frame(
   record = "1001",
-  event_id = "1",
   field_name = "age",
   comment = "Please verify this value",
+  username = "data.team",
   assigned_username = "data.team",
+  # optional: set status_id to append a resolution to an existing query
+  # status_id = "2801447",
   stringsAsFactors = FALSE
 )
 dq_import(client, minimal)
 ```
+
+For minimal data-frame imports, required columns are `record`,
+`field_name`, `comment`, and `username`. If omitted, `event_id` defaults to
+`"1"`. Optional columns include
+`assigned_username`, `status_id`, `repeat_instrument`, `instance`, and
+`response_requested`. Omit `status_id` to create an open-query payload row.
 
 ## Security note
 
