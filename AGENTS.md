@@ -53,6 +53,6 @@ Create an R package from scratch that wraps the Vanderbilt REDCap [data_quality_
 - Keep examples non-networked and safe for CRAN-style checks.
 
 ## Contribution workflow
-- Run unit tests locally before opening PR.
+- Run unit tests locally before opening PR using `Rscript -e 'testthat::test_dir("tests/testthat", load_package = "source")'` when possible.
 - Keep commits scoped and descriptive.
 - Update documentation and tests in the same change when behavior changes.
