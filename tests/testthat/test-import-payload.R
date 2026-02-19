@@ -77,7 +77,7 @@ test_that("build_import_payload defaults event_id to 1 when omitted", {
 
   payload <- redcapdqapi:::build_import_payload(x, project_id = "194")
 
-  expect_equal(payload[[1]]$event_id, "1")
+  expect_equal(payload[[1]]$event_id, "")
 })
 
 test_that("dq_import rejects malformed minimal data frame before network call", {

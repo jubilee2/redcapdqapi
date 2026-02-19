@@ -26,7 +26,7 @@ build_import_payload <- function(data, project_id = NULL) {
 
 build_import_row <- function(data, i, project_id = NULL) {
   record <- required_df_string(data, i, "record")
-  event_id <- optional_df_string(data, i, "event_id", default = "1")
+  event_id <- optional_df_string(data, i, "event_id", default = "")
   field_name <- required_df_string(data, i, "field_name")
   comment <- required_df_string(data, i, "comment")
   assigned_username <- optional_df_string(data, i, "assigned_username", default = NULL)
