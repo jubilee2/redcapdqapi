@@ -10,7 +10,8 @@ dq_import(client, data)
 \itemize{
 \item raw JSON string
 \item export-shaped R list
-\item minimal data frame with columns \code{record}, \code{event_id}, \code{field_name}, \code{comment}, \code{assigned_username}
+\item minimal data frame with columns \code{record}, \code{event_id}, \code{field_name}, \code{comment}
+plus required \code{username} (with optional \code{assigned_username})
 (one OPEN query with one comment is created per row)
 }}
 }
@@ -27,7 +28,7 @@ minimal <- data.frame(
   event_id = "1",
   field_name = "age",
   comment = "Please verify this value",
-  assigned_username = "data.team",
+  username = "data.team",
   stringsAsFactors = FALSE
 )
 dq_import(cli, minimal)

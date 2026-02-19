@@ -6,7 +6,8 @@
 #' @param data Import payload as one of:
 #'   - raw JSON string
 #'   - export-shaped R list
-#'   - minimal data frame with columns `record`, `event_id`, `field_name`, `comment`, `assigned_username`
+#'   - minimal data frame with columns `record`, `event_id`, `field_name`, `comment`
+#'     plus required `username` (with optional `assigned_username`)
 #'     (one OPEN query with one comment is created per row)
 #'
 #' @return Parsed API response for the import request.
@@ -21,7 +22,7 @@
 #'   event_id = "1",
 #'   field_name = "age",
 #'   comment = "Please verify this value",
-#'   assigned_username = "data.team",
+#'   username = "data.team",
 #'   stringsAsFactors = FALSE
 #' )
 #' dq_import(cli, minimal)

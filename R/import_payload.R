@@ -1,5 +1,5 @@
 build_open_import_payload <- function(data, project_id = NULL) {
-  required_cols <- c("record", "event_id", "field_name", "comment", "assigned_username")
+  required_cols <- c("record", "event_id", "field_name", "comment", "username")
   missing <- setdiff(required_cols, names(data))
   if (length(missing) > 0) {
     stop(
@@ -29,38 +29,27 @@ build_open_import_row <- function(data, i, project_id = NULL) {
   event_id <- required_df_string(data, i, "event_id")
   field_name <- required_df_string(data, i, "field_name")
   comment <- required_df_string(data, i, "comment")
-  assigned_username <- required_df_string(data, i, "assigned_username")
-  username <- optional_df_string(data, i, "username", default = assigned_username)
+  assigned_username <- optional_df_string(data, i, "assigned_username", default = NULL)
+  username <- required_df_string(data, i, "username")
 
   list(
-    status_id = NULL,
-    rule_id = NULL,
-    pd_rule_id = NULL,
-    non_rule = "1",
+    status_id = "",
     project_id = if (is.null(project_id)) NULL else as.character(project_id),
     record = record,
     event_id = event_id,
     field_name = field_name,
     repeat_instrument = optional_df_string(data, i, "repeat_instrument", default = NULL),
     instance = optional_df_string(data, i, "instance", default = "1"),
-    status = NULL,
-    exclude = optional_df_string(data, i, "exclude", default = "0"),
-    query_status = "OPEN",
-    group_id = optional_df_string(data, i, "group_id", default = NULL),
     assigned_username = assigned_username,
     resolutions = list(
       "1" = list(
-        res_id = NULL,
-        status_id = NULL,
+        res_id = "",
+        status_id = "",
         ts = current_import_timestamp(),
         response_requested = optional_df_string(data, i, "response_requested", default = "0"),
         response = NULL,
         comment = comment,
         current_query_status = "OPEN",
-        upload_doc_id = NULL,
-        field_comment_edited = "0",
-        migration_status = NULL,
-        migration_doc_id = NULL,
         username = username
       )
     )

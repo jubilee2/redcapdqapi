@@ -4,6 +4,7 @@ test_that("build_open_import_payload converts minimal rows into OPEN status payl
     event_id = c("1", "1"),
     field_name = c("age", "height"),
     comment = c("verify age", "verify height"),
+    username = c("qa_user", "qa_user2"),
     assigned_username = c("qa_user", "qa_user2"),
     stringsAsFactors = FALSE
   )
@@ -16,8 +17,9 @@ test_that("build_open_import_payload converts minimal rows into OPEN status payl
   first <- payload[[1]]
   expect_equal(first$project_id, "194")
   expect_equal(first$record, "1001")
-  expect_equal(first$query_status, "OPEN")
+  expect_equal(first$status_id, "")
   expect_equal(first$assigned_username, "qa_user")
+  expect_equal(first$resolutions[[1]]$status_id, "")
   expect_equal(first$resolutions[[1]]$comment, "verify age")
   expect_equal(first$resolutions[[1]]$current_query_status, "OPEN")
   expect_match(first$resolutions[[1]]$ts, "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")
@@ -29,8 +31,8 @@ test_that("build_open_import_payload supports optional assignment columns", {
     event_id = "1",
     field_name = "age",
     comment = "needs source check",
-    assigned_username = "qa_user",
     username = "qa_user",
+    assigned_username = "qa_user",
     response_requested = "1",
     stringsAsFactors = FALSE
   )
@@ -41,6 +43,23 @@ test_that("build_open_import_payload supports optional assignment columns", {
   expect_equal(row$assigned_username, "qa_user")
   expect_equal(row$resolutions[[1]]$username, "qa_user")
   expect_equal(row$resolutions[[1]]$response_requested, "1")
+})
+
+test_that("build_open_import_payload accepts username without assigned_username", {
+  x <- data.frame(
+    record = "1001",
+    event_id = "1",
+    field_name = "age",
+    comment = "needs source check",
+    username = "qa_user",
+    stringsAsFactors = FALSE
+  )
+
+  payload <- redcapdqapi:::build_open_import_payload(x, project_id = "194")
+  row <- payload[[1]]
+
+  expect_null(row$assigned_username)
+  expect_equal(row$resolutions[[1]]$username, "qa_user")
 })
 
 test_that("dq_import rejects malformed minimal data frame before network call", {
@@ -56,11 +75,11 @@ test_that("dq_import rejects malformed minimal data frame before network call", 
 
   expect_error(
     dq_import(cli, bad),
-    "`data` data frame is missing required columns: comment."
+    "`data` data frame is missing required columns: comment, username."
   )
 })
 
-test_that("dq_import rejects minimal data frame without assigned_username", {
+test_that("dq_import rejects minimal data frame without username", {
   cli <- dq_client("https://redcap.example.org/api/", token = "abc", pid = 12)
 
   bad <- data.frame(
@@ -68,11 +87,12 @@ test_that("dq_import rejects minimal data frame without assigned_username", {
     event_id = "1",
     field_name = "age",
     comment = "please verify",
+    assigned_username = "qa_user",
     stringsAsFactors = FALSE
   )
 
   expect_error(
     dq_import(cli, bad),
-    "`data` data frame is missing required columns: assigned_username."
+    "`data` data frame is missing required columns: username."
   )
 })
