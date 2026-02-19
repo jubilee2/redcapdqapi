@@ -54,6 +54,24 @@ dq_import(client, minimal)
 - Never hardcode tokens in scripts, notebooks, or source control.
 - This package avoids including tokens in error messages.
 
+## Known limitations
+
+- **Repeat instrument support (upstream limitation)**
+  The REDCap Data Quality External Module (`import.php`) currently does not
+  persist `repeat_instrument` when inserting a new status row. Because of this,
+  `dq_import()` cannot create a status scoped to a specific repeating
+  instrument instance. This behavior is an upstream module limitation, not an
+  issue in this R client.
+
+- **Import creates new resolutions only**
+  Import supports creating new resolution comments only; existing resolutions
+  cannot be modified through this API.
+
+- **Duplicate resolution detection key**
+  Duplicate resolution detection is based on `(status_id, ts, user_id)`.
+  Resolutions with the same timestamp and user are treated as duplicates and
+  skipped.
+
 ## API surface
 
 - `dq_client(api_url, token, pid, prefix = "vanderbilt_dataQuality")`
