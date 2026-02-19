@@ -166,3 +166,23 @@ dq_import(client, existing_status_payload)
 - Store API tokens in environment variables (for example, `REDCAP_TOKEN`).
 - Never commit tokens to version control.
 - If import fails, first verify required field completeness and `project_id / status_id` alignment.
+
+## Limitations and upstream constraints
+
+### Repeat instrument handling
+
+The REDCap Data Quality API `import.php` implementation does not store the `repeat_instrument`
+column when inserting new rows into `redcap_data_quality_status`.
+
+Although `repeat_instrument` is used when attempting to match existing status records,
+it is not written during status creation. As a result:
+
+- A new status cannot be created that is scoped specifically to a repeating instrument.
+- Statuses created via the API will have `repeat_instrument = NULL`.
+- In repeating instrument contexts, instance-level isolation may not behave as expected.
+
+This behavior originates from the upstream REDCap Data Quality External Module
+and is not controlled by `redcapdqapi`.
+
+Users who require repeat-instrument–aware status creation must modify the upstream
+`import.php` implementation accordingly.
