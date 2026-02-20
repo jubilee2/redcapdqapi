@@ -7,7 +7,7 @@
 #'   - raw JSON string
 #'   - export-shaped R list
 #'   - minimal data frame with columns `record`, `field_name`, `comment`
-#'     plus required `username` (`event_id` defaults to `"1"` if omitted;
+#'     plus required `username` (`event_id` defaults to `""` if omitted;
 #'     optional `assigned_username`)
 #'     (one query resolution payload row is created per row)
 #'

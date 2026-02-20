@@ -11,7 +11,7 @@ dq_import(client, data)
 \item raw JSON string
 \item export-shaped R list
 \item minimal data frame with columns \code{record}, \code{field_name}, \code{comment}
-plus required \code{username} (\code{event_id} defaults to \code{"1"} if omitted;
+plus required \code{username} (\code{event_id} defaults to \code{""} if omitted;
 optional \code{assigned_username})
 (one query resolution payload row is created per row)
 }}

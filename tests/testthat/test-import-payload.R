@@ -28,7 +28,7 @@ test_that("build_import_payload converts minimal rows into import payload", {
 test_that("build_import_payload supports optional assignment columns and status_id", {
   x <- data.frame(
     record = "1001",
-    event_id = "1",
+    event_id = "",
     field_name = "age",
     comment = "needs source check",
     username = "qa_user",
@@ -51,7 +51,7 @@ test_that("build_import_payload supports optional assignment columns and status_
 test_that("build_import_payload accepts username without assigned_username", {
   x <- data.frame(
     record = "1001",
-    event_id = "1",
+    event_id = "",
     field_name = "age",
     comment = "needs source check",
     username = "qa_user",
@@ -66,7 +66,7 @@ test_that("build_import_payload accepts username without assigned_username", {
 })
 
 
-test_that("build_import_payload defaults event_id to 1 when omitted", {
+test_that("build_import_payload defaults event_id to empty string when omitted", {
   x <- data.frame(
     record = "1001",
     field_name = "age",
@@ -85,7 +85,7 @@ test_that("dq_import rejects malformed minimal data frame before network call", 
 
   bad <- data.frame(
     record = "1001",
-    event_id = "1",
+    event_id = "",
     field_name = "age",
     assigned_username = "qa_user",
     stringsAsFactors = FALSE
@@ -102,7 +102,7 @@ test_that("dq_import rejects minimal data frame without username", {
 
   bad <- data.frame(
     record = "1001",
-    event_id = "1",
+    event_id = "",
     field_name = "age",
     comment = "please verify",
     assigned_username = "qa_user",
