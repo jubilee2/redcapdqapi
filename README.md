@@ -52,9 +52,16 @@ dq_import(client, minimal)
 
 For minimal data-frame imports, required columns are `record`,
 `field_name`, `comment`, and `username`. If omitted, `event_id` defaults to
-`"1"`. Optional columns include
+`""` (empty string). Optional columns include
 `assigned_username`, `status_id`, `repeat_instrument`, `instance`, and
 `response_requested`. Omit `status_id` to create an open-query payload row.
+
+`event_id` usage depends on project setup:
+
+- If repeating events/instruments are **disabled** in the REDCap project, you can
+  omit `event_id` and use the default `""`.
+- If repeating events or repeating instruments are **enabled** in the REDCap
+  project, provide a valid `event_id` in each row.
 
 ## Security note
 
