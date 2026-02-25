@@ -33,6 +33,7 @@ build_import_row <- function(data, i, project_id = NULL) {
   username <- required_df_string(data, i, "username")
   status_id <- optional_df_string(data, i, "status_id", default = "")
   current_query_status <- optional_query_status(data, i)
+  response <- optional_response(data, i)
 
   list(
     status_id = status_id,
@@ -49,13 +50,46 @@ build_import_row <- function(data, i, project_id = NULL) {
         status_id = status_id,
         ts = current_import_timestamp(),
         response_requested = optional_df_string(data, i, "response_requested", default = "1"),
-        response = NULL,
+        response = response,
         comment = comment,
         current_query_status = current_query_status,
         username = username
       )
     )
   )
+}
+
+optional_response <- function(data, i) {
+  value <- optional_df_string(data, i, "response", default = NULL)
+  if (is.null(value)) {
+    return(NULL)
+  }
+
+  value <- toupper(trimws(value))
+  if (!nzchar(value)) {
+    return(NULL)
+  }
+  
+  allowed <- c(
+    "DATA_MISSING",
+    "TYPOGRAPHICAL_ERROR",
+    "CONFIRMED_CORRECT",
+    "WRONG_SOURCE",
+    "OTHER"
+  )
+
+  if (!value %in% allowed) {
+    stop(
+      sprintf(
+        "`data$response` must be one of %s, or blank, for row %s.",
+        paste(shQuote(allowed), collapse = ", "),
+        i
+      ),
+      call. = FALSE
+    )
+  }
+
+  value
 }
 
 optional_query_status <- function(data, i) {

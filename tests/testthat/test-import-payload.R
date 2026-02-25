@@ -81,6 +81,69 @@ test_that("build_import_payload defaults event_id to empty string when omitted",
   expect_equal(payload[[1]]$event_id, "")
 })
 
+
+test_that("build_import_payload supports optional response values", {
+  allowed <- c("DATA_MISSING", "TYPOGRAPHICAL_ERROR", "CONFIRMED_CORRECT", "WRONG_SOURCE", "OTHER")
+
+  for (response in allowed) {
+    x <- data.frame(
+      record = "1001",
+      field_name = "age",
+      comment = "needs source check",
+      username = "qa_user",
+      response = response,
+      stringsAsFactors = FALSE
+    )
+
+    payload <- redcapdqapi:::build_import_payload(x, project_id = "194")
+    expect_equal(payload[[1]]$resolutions[[1]]$response, response)
+  }
+})
+
+test_that("build_import_payload defaults blank response to NULL", {
+  x <- data.frame(
+    record = "1001",
+    field_name = "age",
+    comment = "needs source check",
+    username = "qa_user",
+    response = "",
+    stringsAsFactors = FALSE
+  )
+
+  payload <- redcapdqapi:::build_import_payload(x, project_id = "194")
+  expect_null(payload[[1]]$resolutions[[1]]$response)
+})
+
+test_that("build_import_payload normalizes response casing and whitespace", {
+  x <- data.frame(
+    record = "1001",
+    field_name = "age",
+    comment = "needs source check",
+    username = "qa_user",
+    response = " typographical_error ",
+    stringsAsFactors = FALSE
+  )
+
+  payload <- redcapdqapi:::build_import_payload(x, project_id = "194")
+  expect_equal(payload[[1]]$resolutions[[1]]$response, "TYPOGRAPHICAL_ERROR")
+})
+
+test_that("build_import_payload rejects invalid response values", {
+  x <- data.frame(
+    record = "1001",
+    field_name = "age",
+    comment = "needs source check",
+    username = "qa_user",
+    response = "NOT_A_VALID_RESPONSE",
+    stringsAsFactors = FALSE
+  )
+
+  expect_error(
+    redcapdqapi:::build_import_payload(x, project_id = "194"),
+    "`data\\$response` must be one of"
+  )
+})
+
 test_that("build_import_payload supports optional current_query_status values", {
   allowed <- c("OPEN", "CLOSED", "VERIFIED", "DEVERIFIED")
 

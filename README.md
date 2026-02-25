@@ -45,6 +45,8 @@ minimal <- data.frame(
   assigned_username = "data.team",
   # optional: set status_id to append a resolution to an existing query
   # status_id = "2801447",
+  # optional: response in DATA_MISSING/TYPOGRAPHICAL_ERROR/CONFIRMED_CORRECT/WRONG_SOURCE/OTHER
+  # response = "TYPOGRAPHICAL_ERROR",
   # optional: current_query_status in OPEN/CLOSED/VERIFIED/DEVERIFIED
   # current_query_status = "VERIFIED",
   stringsAsFactors = FALSE
@@ -56,7 +58,10 @@ For minimal data-frame imports, required columns are `record`,
 `field_name`, `comment`, and `username`. If omitted, `event_id` defaults to
 `""` (empty string). Optional columns include
 `assigned_username`, `status_id`, `repeat_instrument`, `instance`,
-`response_requested` (defaults to `"1"`), and `current_query_status`.
+`response_requested` (defaults to `"1"`), `response`, and `current_query_status`.
+
+`response` accepts `DATA_MISSING`, `TYPOGRAPHICAL_ERROR`, `CONFIRMED_CORRECT`,
+`WRONG_SOURCE`, `OTHER`, or blank.
 
 `current_query_status` accepts `OPEN`, `CLOSED`, `VERIFIED`, `DEVERIFIED`,
 or blank (default is `OPEN`). Omit `status_id` to create an

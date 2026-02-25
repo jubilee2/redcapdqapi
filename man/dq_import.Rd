@@ -12,8 +12,9 @@ dq_import(client, data)
 \item export-shaped R list
 \item minimal data frame with columns \code{record}, \code{field_name}, \code{comment}
 plus required \code{username} (\code{event_id} defaults to \code{""} if omitted;
-optional \code{assigned_username}; optional \code{response_requested} (defaults to \code{"1"}); optional \code{current_query_status}
-in \code{OPEN}, \code{CLOSED}, \code{VERIFIED}, \code{DEVERIFIED}, or blank (default is \code{OPEN})
+optional \code{assigned_username}; optional \code{response_requested} (defaults to \code{"1"}); optional \code{response}
+in \code{DATA_MISSING}, \code{TYPOGRAPHICAL_ERROR}, \code{CONFIRMED_CORRECT}, \code{WRONG_SOURCE}, \code{OTHER}, or blank;
+optional \code{current_query_status} in \code{OPEN}, \code{CLOSED}, \code{VERIFIED}, \code{DEVERIFIED}, or blank (default is \code{OPEN})
 (one query resolution payload row is created per row)
 }}
 }

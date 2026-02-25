@@ -45,7 +45,7 @@ Important import behavior in `data_quality_api`:
 
 - raw JSON string
 - export-shaped R list (automatically converted using `toJSON`)
-- minimal data frame (converted by the package into payload; `current_query_status` can be supplied)
+- minimal data frame (converted by the package into payload; `response` and `current_query_status` can be supplied)
 
 ## Fields required to create a new query row
 
