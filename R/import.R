@@ -5,13 +5,22 @@
 #' @param client A `dq_client` object.
 #' @param data Import payload as one of:
 #'   - raw JSON string
-#'   - export-shaped R list
-#'   - minimal data frame with columns `record`, `field_name`, `comment`
-#'     plus required `username` (`event_id` defaults to `""` if omitted;
-#'     optional `assigned_username`; optional `response_requested` (defaults to `"1"`); optional `response`
-#'     in `DATA_MISSING`, `TYPOGRAPHICAL_ERROR`, `CONFIRMED_CORRECT`, `WRONG_SOURCE`, `OTHER`, or blank;
-#'     optional `current_query_status` in `OPEN`, `CLOSED`, `VERIFIED`, `DEVERIFIED`, or blank (default is `OPEN`)
-#'     (one query resolution payload row is created per row)
+#'   - export-shaped R list. For each query row, use keys:
+#'     - `status_id`, `record`, `event_id`, `field_name`, `assigned_username`
+#'     - `repeat_instrument`, `instance`, `project_id`
+#'     - `resolutions` (named list), where each resolution includes:
+#'       - `res_id`, `status_id`, `ts`, `response_requested`, `response`
+#'       - `comment`, `current_query_status`, `username`
+#'   - minimal data frame with columns:
+#'     - required: `record`, `field_name`, `comment`, `username`
+#'     - optional: `event_id` (defaults to `""`), `assigned_username`, `repeat_instrument`, `instance`
+#'     - optional: `response_requested` (defaults to `"1"`)
+#'     - optional: `response` in `DATA_MISSING`, `TYPOGRAPHICAL_ERROR`,
+#'       `CONFIRMED_CORRECT`, `WRONG_SOURCE`, `OTHER`, or blank
+#'     - optional: `current_query_status` in `OPEN`, `CLOSED`, `VERIFIED`,
+#'       `DEVERIFIED`, or blank (default is `OPEN`)
+#'     - optional: `status_id`
+#'     - one query resolution payload row is created per data-frame row
 #'
 #' @return Parsed API response for the import request.
 #' @examples
