@@ -45,7 +45,7 @@ Important import behavior in `data_quality_api`:
 
 - raw JSON string
 - export-shaped R list (automatically converted using `toJSON`)
-- minimal data frame (converted by the package into OPEN-query payload)
+- minimal data frame (converted by the package into payload; `current_query_status` can be supplied)
 
 ## Fields required to create a new query row
 
@@ -76,6 +76,10 @@ Each comment is in `dataRow$resolutions[[i]]`. Recommended minimum fields:
 Query-state fields (recommended):
 
 - `current_query_status`: e.g., `OPEN`, `CLOSED`, `VERIFIED`, `DEVERIFIED`
+
+For data-frame imports via `dq_import()`, `current_query_status` is optional and may be one of
+`OPEN`, `CLOSED`, `VERIFIED`, `DEVERIFIED`, or blank (default is `OPEN`).
+
 - `response_requested`: `0` or `1`
 - `response`: e.g., `DATA_MISSING`, `TYPOGRAPHICAL_ERROR`, `CONFIRMED_CORRECT`, `WRONG_SOURCE`, `OTHER`
 

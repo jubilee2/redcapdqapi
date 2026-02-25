@@ -45,6 +45,8 @@ minimal <- data.frame(
   assigned_username = "data.team",
   # optional: set status_id to append a resolution to an existing query
   # status_id = "2801447",
+  # optional: current_query_status in OPEN/CLOSED/VERIFIED/DEVERIFIED
+  # current_query_status = "VERIFIED",
   stringsAsFactors = FALSE
 )
 dq_import(client, minimal)
@@ -53,8 +55,12 @@ dq_import(client, minimal)
 For minimal data-frame imports, required columns are `record`,
 `field_name`, `comment`, and `username`. If omitted, `event_id` defaults to
 `""` (empty string). Optional columns include
-`assigned_username`, `status_id`, `repeat_instrument`, `instance`, and
-`response_requested`. Omit `status_id` to create an open-query payload row.
+`assigned_username`, `status_id`, `repeat_instrument`, `instance`,
+`response_requested`, and `current_query_status`.
+
+`current_query_status` accepts `OPEN`, `CLOSED`, `VERIFIED`, `DEVERIFIED`,
+or blank (default is `OPEN`). Omit `status_id` to create an
+open-query payload row.
 
 `event_id` usage depends on project setup:
 

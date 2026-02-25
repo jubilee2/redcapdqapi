@@ -32,6 +32,7 @@ build_import_row <- function(data, i, project_id = NULL) {
   assigned_username <- optional_df_string(data, i, "assigned_username", default = NULL)
   username <- required_df_string(data, i, "username")
   status_id <- optional_df_string(data, i, "status_id", default = "")
+  current_query_status <- optional_query_status(data, i)
 
   list(
     status_id = status_id,
@@ -50,11 +51,31 @@ build_import_row <- function(data, i, project_id = NULL) {
         response_requested = optional_df_string(data, i, "response_requested", default = "0"),
         response = NULL,
         comment = comment,
-        current_query_status = "OPEN",
+        current_query_status = current_query_status,
         username = username
       )
     )
   )
+}
+
+optional_query_status <- function(data, i) {
+  value <- optional_df_string(data, i, "current_query_status", default = "OPEN")
+
+  value <- toupper(trimws(value))
+
+  allowed <- c("OPEN", "CLOSED", "VERIFIED", "DEVERIFIED")
+  if (!value %in% allowed) {
+    stop(
+      sprintf(
+        "`data$current_query_status` must be one of %s, or blank, for row %s.",
+        paste(shQuote(allowed), collapse = ", "),
+        i
+      ),
+      call. = FALSE
+    )
+  }
+
+  value
 }
 
 required_df_string <- function(data, i, col_name) {

@@ -8,7 +8,8 @@
 #'   - export-shaped R list
 #'   - minimal data frame with columns `record`, `field_name`, `comment`
 #'     plus required `username` (`event_id` defaults to `""` if omitted;
-#'     optional `assigned_username`)
+#'     optional `assigned_username`; optional `current_query_status`
+#'     in `OPEN`, `CLOSED`, `VERIFIED`, `DEVERIFIED`, or blank (default is `OPEN`)
 #'     (one query resolution payload row is created per row)
 #'
 #' @return Parsed API response for the import request.
