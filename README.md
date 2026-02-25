@@ -56,7 +56,7 @@ For minimal data-frame imports, required columns are `record`,
 `field_name`, `comment`, and `username`. If omitted, `event_id` defaults to
 `""` (empty string). Optional columns include
 `assigned_username`, `status_id`, `repeat_instrument`, `instance`,
-`response_requested`, and `current_query_status`.
+`response_requested` (defaults to `"1"`), and `current_query_status`.
 
 `current_query_status` accepts `OPEN`, `CLOSED`, `VERIFIED`, `DEVERIFIED`,
 or blank (default is `OPEN`). Omit `status_id` to create an

@@ -8,7 +8,7 @@
 #'   - export-shaped R list
 #'   - minimal data frame with columns `record`, `field_name`, `comment`
 #'     plus required `username` (`event_id` defaults to `""` if omitted;
-#'     optional `assigned_username`; optional `current_query_status`
+#'     optional `assigned_username`; optional `response_requested` (defaults to `"1"`); optional `current_query_status`
 #'     in `OPEN`, `CLOSED`, `VERIFIED`, `DEVERIFIED`, or blank (default is `OPEN`)
 #'     (one query resolution payload row is created per row)
 #'

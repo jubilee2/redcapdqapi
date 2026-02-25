@@ -48,7 +48,7 @@ build_import_row <- function(data, i, project_id = NULL) {
         res_id = "",
         status_id = status_id,
         ts = current_import_timestamp(),
-        response_requested = optional_df_string(data, i, "response_requested", default = "0"),
+        response_requested = optional_df_string(data, i, "response_requested", default = "1"),
         response = NULL,
         comment = comment,
         current_query_status = current_query_status,

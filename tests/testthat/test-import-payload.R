@@ -21,6 +21,7 @@ test_that("build_import_payload converts minimal rows into import payload", {
   expect_equal(first$assigned_username, "qa_user")
   expect_equal(first$resolutions[[1]]$status_id, "")
   expect_equal(first$resolutions[[1]]$comment, "verify age")
+  expect_equal(first$resolutions[[1]]$response_requested, "1")
   expect_equal(first$resolutions[[1]]$current_query_status, "OPEN")
   expect_match(first$resolutions[[1]]$ts, "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")
 })

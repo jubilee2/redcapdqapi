@@ -19,7 +19,7 @@
         "res_id": "1",
         "status_id": "123",
         "ts": "2026-02-16 10:00:00",
-        "response_requested": "0",
+        "response_requested": "1",
         "response": null,
         "comment": "this is a test",
         "current_query_status": null,
